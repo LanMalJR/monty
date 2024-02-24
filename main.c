@@ -1,5 +1,9 @@
 #define _GNU_SOURCE 
 #include "monty.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 int main(int argc, char **argv)
 {
@@ -37,7 +41,7 @@ int main(int argc, char **argv)
             if (token == NULL || isspace((unsigned char)*token))
             {
                 fprintf(stderr, "L%u: usage: push integer\n", line_number);
-                free_stack(&stack); 
+                free_stack(&stack, line_number); 
                 fclose(file);
                 free(line);
                 return (EXIT_FAILURE);
@@ -45,7 +49,7 @@ int main(int argc, char **argv)
         }
     }
 
-    free_stack(&stack); 
+    free_stack(&stack, line_number); 
     fclose(file);
     free(line);
     return (EXIT_SUCCESS); 
