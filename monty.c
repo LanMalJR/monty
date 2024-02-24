@@ -4,7 +4,7 @@
 void push(stack_t **stack, unsigned int line_number)
 {
     stack_t *new_node;
-    int value;
+    int value __attribute__((unused));
 
     if (!*stack)
     {
