@@ -54,4 +54,7 @@ void add(stack_t **stack, unsigned int line_number);
 /* Function to do nothing */
 void nop(stack_t **stack, unsigned int line_number);
 
+/* Function free stack */
+void free_stack(stack_t **stack);
+
 #endif /* MONTY_H */
