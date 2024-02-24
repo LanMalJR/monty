@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     stack_t *stack = NULL;
     char *line = NULL, *token = NULL;
     size_t len = 0;
-    ssize_t read;
+    size_t read;
     unsigned int line_number = 1;
     FILE *file;
 
