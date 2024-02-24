@@ -1,49 +1,58 @@
 #include "monty.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
-/* Function to push an element onto the stack */
-void push(stack_t **stack, unsigned int line_number)
+/**
+ * main - Monty bytecode interpreter.
+ * @argc: Number of arguments.
+ * @argv: Arguments.
+ *
+ * Return: EXIT_SUCCESS or EXIT_FAILURE.
+ */
+int main(int argc, char **argv)
 {
-    stack_t *new_node;
-    int value __attribute__((unused));
+    stack_t *stack = NULL;
+    char *line = NULL, *token = NULL;
+    size_t len = 0;
+    ssize_t read;
+    unsigned int line_number = 1;
+    FILE *file;
 
-    if (!*stack)
+    if (argc != 2)
     {
-        *stack = malloc(sizeof(stack_t));
-        if (!*stack)
+        fprintf(stderr, "USAGE: monty file\n");
+        return (EXIT_FAILURE);
+    }
+
+    file = fopen(argv[1], "r");
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+        return (EXIT_FAILURE);
+    }
+
+    while ((read = getline(&line, &len, file)) != -1)
+    {
+        line_number++;
+        token = strtok(line, " \t\n");
+
+        if (token == NULL || strlen(token) == 0)
+            continue;
+
+        if (strcmp(token, "push") == 0)
         {
-            fprintf(stderr, "Error: malloc failed\n");
-            exit(EXIT_FAILURE);
+            token = strtok(NULL, " \t\n");
+            if (token == NULL || isspace((unsigned char)*token))
+            {
+                fprintf(stderr, "L%u: usage: push integer\n", line_number);
+                free_stack(stack);
+                fclose(file);
+                free(line);
+                return (EXIT_FAILURE);
+            }
+
         }
-        (*stack)->n = line_number;
-        (*stack)->prev = NULL;
-        (*stack)->next = NULL;
     }
-    else
-    {
-        new_node = malloc(sizeof(stack_t));
-        if (!new_node)
-        {
-            fprintf(stderr, "Error: malloc failed\n");
-            exit(EXIT_FAILURE);
-        }
-        new_node->n = line_number;
-        new_node->prev = *stack;
-        new_node->next = NULL;
-        (*stack)->next = new_node;
-        *stack = new_node;
-    }
-}
-
-/* Function to print all elements of the stack */
-void pall(stack_t **stack, unsigned int line_number)
-{
-    stack_t *temp = *stack;
-
-    (void)line_number; /* Unused parameter */
-
-    while (temp)
-    {
-        printf("%d\n", temp->n);
-        temp = temp->next;
-    }
-}
+}            
